@@ -40,9 +40,18 @@ async def get_targets_from_source():
                 data = json.load(f)
         
         if data:
+            print(f"🔍 Mencari template: '{TARGET_TEMPLATE_NAME}'")
             for phone, templates in data.items():
+                # Debugging: Tampilkan template yang tersedia
+                available = list(templates.keys())
+                print(f"   -> Akun {phone} memiliki template: {available}")
+                
                 if TARGET_TEMPLATE_NAME in templates:
+                    count = len(templates[TARGET_TEMPLATE_NAME])
+                    print(f"      ✅ Ketemu! Menambahkan {count} target.")
                     targets.extend(templates[TARGET_TEMPLATE_NAME])
+                else:
+                    print(f"      ❌ Tidak cocok.")
     except: pass
     return targets
 
