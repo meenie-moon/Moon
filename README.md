@@ -1,6 +1,6 @@
 # MoonTele - Modern Telegram Automation Tool 🌙
 
-**MoonTele** adalah alat otomasi Telegram berbasis CLI (Command Line Interface) yang kini hadir dengan **Tampilan Modern (Rich UI)**. Ditulis dalam Python, alat ini dirancang untuk membantu Anda mengelola grup, saluran, dan forum Telegram dengan pengalaman pengguna yang interaktif, rapi, dan profesional.
+**MoonTele** adalah alat otomasi Telegram berbasis CLI (Command Line Interface) yang kini hadir dengan **Tampilan Modern (Rich UI)**. Ditulis dalam Python, alat ini dirancang untuk membantu Anda mengelola grup, saluran, dan forum Telegram, serta berfungsi sebagai **Bot Promosi (Iklan Massal)** yang efektif dengan pengalaman pengguna yang interaktif, rapi, dan profesional.
 
 ## ✨ Fitur Baru (v2.0)
 
