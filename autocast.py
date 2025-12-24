@@ -15,7 +15,10 @@ TARGETS_JSON_ENV = os.environ.get('TG_TARGETS_JSON')
 
 # Konfigurasi Baru
 SOURCE_LINK = os.environ.get('TG_SOURCE_MESSAGE_LINK') # Link pesan sumber
-DELAY_MIN = int(os.environ.get('TG_DELAY_SECONDS_MIN', 10)) # Default min 10 detik
+
+# Handle empty string from secrets properly for DELAY
+delay_env = os.environ.get('TG_DELAY_SECONDS_MIN')
+DELAY_MIN = int(delay_env) if delay_env and delay_env.strip() else 10
 
 # Nama Template
 TARGET_TEMPLATE_NAME = os.environ.get('TG_TEMPLATE_NAME', 'Promo Harian') 
