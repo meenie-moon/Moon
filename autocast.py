@@ -100,6 +100,15 @@ async def main():
             print("❌ Sesi login kadaluarsa.")
             return
 
+        me = await client.get_me()
+        print(f"🔑 Login sebagai: {me.first_name} (@{me.username})")
+
+        # --- FIX: Load Dialogs to cache entities ---
+        # Penting agar Telethon 'mengenal' ID chat target
+        print("🔄 Sinkronisasi Dialog (Memuat cache entitas)...")
+        await client.get_dialogs()
+        # -------------------------------------------
+
         # 1. Ambil Target
         targets = await get_targets_from_source()
         if not targets:
