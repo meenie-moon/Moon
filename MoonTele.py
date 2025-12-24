@@ -525,9 +525,15 @@ async def select_topic_interactive(forwarder, chat_id):
     table.add_column("ID", style="dim")
 
     topic_list = []
-    for i, t in enumerate(topics, 1):
+    index = 1
+    for t in topics:
+        # Skip deleted topics or those without title
+        if not hasattr(t, 'title'):
+            continue
+            
         topic_list.append(t)
-        table.add_row(str(i), t.title, str(t.id))
+        table.add_row(str(index), t.title, str(t.id))
+        index += 1
 
     console.print(table)
     console.print("[0] All Topics (Entire Group)", style="bold green")
@@ -938,10 +944,24 @@ async def main():
             if choice == "1":
                 dialogs = await forwarder.get_dialogs_list()
                 if dialogs:
+                    # Save to file
                     with open(f"chats_of_{active_account['phone']}.txt", "w", encoding="utf-8") as f:
                         for d in dialogs: f.write(f"ID: {d.id}, Title: {d.title}\n")
-                    for i, d in enumerate(dialogs, 1): print(f"{i}. {d.title}")
-                    print("\n✅ List saved.")
+                    
+                    # Create Rich Table
+                    table = Table(title=f"Chat List ({len(dialogs)} items)", box=None, padding=(0,1))
+                    table.add_column("No", justify="right", style="cyan")
+                    table.add_column("Chat Title", style="white")
+                    table.add_column("ID", style="dim")
+                    table.add_column("Type", style="yellow")
+
+                    for i, dialog in enumerate(dialogs, 1):
+                        d_type = "Forum" if getattr(dialog.entity, 'forum', False) else ("Group" if dialog.is_group else "Channel" if dialog.is_channel else "User")
+                        table.add_row(str(i), dialog.title, str(dialog.id), d_type)
+
+                    console.print(table)
+                    print(f"\n✅ List saved to 'chats_of_{active_account['phone']}.txt'")
+                    console.input("\n[dim]Press Enter to continue...[/dim]") # Tambahkan jeda di sini
 
             elif choice == "2":
                 source_id, source_title, topic_id, topic_title = await select_chat_interactive(forwarder, "Select SOURCE Chat")
