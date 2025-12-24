@@ -31,8 +31,8 @@ Pastikan Anda telah menginstal `python` dan `git` di perangkat Anda (PC/VPS/Term
 
 1.  **Clone Repository:**
     ```bash
-    git clone https://github.com/username/MoonTele.git
-    cd MoonTele
+    git clone https://github.com/meenie-moon/Moon.git
+    cd Moon
     ```
 
 2.  **Install Dependensi:**

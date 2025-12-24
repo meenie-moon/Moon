@@ -1,0 +1,19 @@
+# Ignore everything by default
+*
+
+# Allow directories (so we can traverse them if needed, though mostly flat here)
+!*/
+
+# Whitelist specific files (Keep these)
+!MoonTele.py
+!requirements.txt
+!README.md
+!.gitignore
+
+# Explicitly ignore sensitive and generated files (Double safety)
+*.session
+*.session-journal
+*.json
+*.txt
+!requirements.txt
+__pycache__/
