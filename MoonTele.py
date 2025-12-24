@@ -7,6 +7,8 @@ from telethon.sync import TelegramClient
 from telethon import errors
 from telethon.tl.types import InputPeerChannel
 
+from telethon.tl.functions.messages import GetForumTopicsRequest, ForwardMessagesRequest
+
 # --- Rich UI Imports ---
 from rich.console import Console
 from rich.panel import Panel
@@ -294,18 +296,26 @@ class TelegramForwarder:
         try:
             # Mode 1: True Forward (Retains "Forwarded from", Views, etc.)
             if as_forward:
-                # Determine from_peer based on message object type (List/Album or Single)
-                msgs_to_forward = message_object
-                
-                # forward_messages handles both list (album) and single message ID/Object
-                # NOTE: forward_messages does NOT support reply_to (so cannot target topics precisely)
-                if topic_id:
-                    print(f"⚠️  Note: 'True Forward' mode ignores Topic ID (API Limit). Message sent to General.")
+                # 1. Prepare Message IDs and Origin Chat
+                if isinstance(message_object, list):
+                    msg_ids = [m.id for m in message_object]
+                    origin_chat_id = message_object[0].chat_id
+                else:
+                    msg_ids = [message_object.id]
+                    origin_chat_id = message_object.chat_id
 
-                await self.client.forward_messages(
-                    target_chat_id,
-                    msgs_to_forward
-                )
+                # 2. Get InputPeer for the source chat (Required for Raw API)
+                from_peer = await self.client.get_input_entity(origin_chat_id)
+                target_peer = await self.client.get_input_entity(target_chat_id)
+
+                # 3. Execute Raw Forward Request (Supports top_msg_id for Topics)
+                from telethon.tl.functions.messages import ForwardMessagesRequest
+                await self.client(ForwardMessagesRequest(
+                    from_peer=from_peer,
+                    id=msg_ids,
+                    to_peer=target_peer,
+                    top_msg_id=topic_id if topic_id else None  # ✅ This fixes the topic targeting!
+                ))
                 
             # Mode 2: Send as Copy (Clean, no tag)
             else:
