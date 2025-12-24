@@ -288,37 +288,53 @@ class TelegramForwarder:
             print(f"❌ Failed to send to {chat_title}: {e}")
             return False
 
-    async def forward_existing_message(self, target_chat_id, message_object, topic_id=None, chat_title="Unknown", topic_title=None):
+    async def forward_existing_message(self, target_chat_id, message_object, topic_id=None, chat_title="Unknown", topic_title=None, as_forward=False):
         """Forwards a specific message object (or list of objects for albums) to a chat/topic."""
         await self._ensure_authorized()
         try:
-            # Check if it's an Album (list of messages)
-            if isinstance(message_object, list):
-                # Find caption (usually on the first item or any item with text)
-                caption = None
-                for m in message_object:
-                    if m.text:
-                        caption = m.text
-                        break
+            # Mode 1: True Forward (Retains "Forwarded from", Views, etc.)
+            if as_forward:
+                # Determine from_peer based on message object type (List/Album or Single)
+                msgs_to_forward = message_object
                 
-                # Send as Album
-                # When passing a list of Messages to 'file', Telethon sends them as an album.
-                # We explicitely pass the caption to ensure it's attached.
-                await self.client.send_message(
-                    target_chat_id, 
-                    message=caption, 
-                    file=message_object, 
-                    reply_to=topic_id
+                # forward_messages handles both list (album) and single message ID/Object
+                # NOTE: forward_messages does NOT support reply_to (so cannot target topics precisely)
+                if topic_id:
+                    print(f"⚠️  Note: 'True Forward' mode ignores Topic ID (API Limit). Message sent to General.")
+
+                await self.client.forward_messages(
+                    target_chat_id,
+                    msgs_to_forward
                 )
+                
+            # Mode 2: Send as Copy (Clean, no tag)
             else:
-                # Single Message
-                await self.client.send_message(target_chat_id, message_object, reply_to=topic_id)
+                # Check if it's an Album (list of messages)
+                if isinstance(message_object, list):
+                    # Find caption (usually on the first item or any item with text)
+                    caption = None
+                    for m in message_object:
+                        if m.text:
+                            caption = m.text
+                            break
+                    
+                    # Send as Album
+                    await self.client.send_message(
+                        target_chat_id, 
+                        message=caption, 
+                        file=message_object, 
+                        reply_to=topic_id
+                    )
+                else:
+                    # Single Message
+                    await self.client.send_message(target_chat_id, message_object, reply_to=topic_id)
                 
             target_info = f"{chat_title}" + (f" (Topic: {topic_title})" if topic_title else "")
-            print(f"✅ Forwarded to: {target_info}")
+            mode_str = "Forwarded" if as_forward else "Sent Copy"
+            print(f"✅ {mode_str} to: {target_info}")
             return True
         except Exception as e:
-            print(f"❌ Failed to forward to {chat_title}: {e}")
+            print(f"❌ Failed to process {chat_title}: {e}")
             return False
 
 
@@ -1168,6 +1184,17 @@ async def main():
                     if not message_text and not message_object:
                         console.print("[red]❌ No valid message to send.[/red]")
                     else:
+                        # --- Mode Selection (Only for Message Objects/Links) ---
+                        send_as_forward = False
+                        if message_object:
+                            console.print(Panel("[1] Send as Copy (Clean, No Tag)\n[2] Forward (With Tag & Views, Trusted)", title="Forwarding Mode", border_style="cyan"))
+                            mode_input = console.input("[bold yellow]❯ Select Mode (Default 1): [/bold yellow]")
+                            if mode_input == "2":
+                                send_as_forward = True
+                                console.print("[green]✅ Mode: True Forward (Tag enabled)[/green]")
+                            else:
+                                console.print("[green]✅ Mode: Send as Copy (Clean)[/green]")
+                        
                         console.print(f"\n[green]🚀 Ready to send to {len(targets)} targets.[/green]")
                         
                         console.print(Panel("""[bold white]Delay Settings[/bold white]
@@ -1204,7 +1231,8 @@ Set a delay between messages to avoid spam detection.
                                             t['id'], message_object, 
                                             topic_id=t.get('topic_id'), 
                                             chat_title=t['title'], 
-                                            topic_title=t.get('topic_title')
+                                            topic_title=t.get('topic_title'),
+                                            as_forward=send_as_forward
                                         )
                                     else:
                                         await forwarder.send_custom_message(
