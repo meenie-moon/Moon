@@ -39,5 +39,5 @@ jobs:
         TG_DELAY_SECONDS_MIN: ${{ secrets.TG_DELAY_SECONDS_MIN }}
         
         # Nama Template
-        TG_TEMPLATE_NAME: 'Promo Harian' 
+        TG_TEMPLATE_NAME: 'tes' 
       run: python autocast.py
