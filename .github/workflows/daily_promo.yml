@@ -2,11 +2,8 @@ name: Hourly Promo Broadcast
 
 on:
   schedule:
-    # Jalan SETIAP JAM pada menit ke-0 (Contoh: 08:00, 09:00, 10:00...)
-    # Catatan: GitHub Actions mungkin delay 5-10 menit dari jadwal karena antrian server gratis.
+    # Jalan SETIAP JAM pada menit ke-0
     - cron: '0 * * * *'
-  
-  # Tombol manual "Run Workflow"
   workflow_dispatch:
 
 jobs:
@@ -29,14 +26,18 @@ jobs:
 
     - name: Run Auto-Broadcast
       env:
-        # Kredensial Akun
+        # Auth
         TG_API_ID: ${{ secrets.TG_API_ID }}
         TG_API_HASH: ${{ secrets.TG_API_HASH }}
         TG_SESSION_STRING: ${{ secrets.TG_SESSION_STRING }}
         
-        # DATA TARGET RAHASIA (JSON)
+        # Target Data
         TG_TARGETS_JSON: ${{ secrets.TG_TARGETS_JSON }}
         
-        # Nama template
+        # Konfigurasi Pesan & Delay
+        TG_SOURCE_MESSAGE_LINK: ${{ secrets.TG_SOURCE_MESSAGE_LINK }}
+        TG_DELAY_SECONDS_MIN: ${{ secrets.TG_DELAY_SECONDS_MIN }}
+        
+        # Nama Template
         TG_TEMPLATE_NAME: 'Promo Harian' 
       run: python autocast.py
