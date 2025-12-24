@@ -2,8 +2,9 @@ name: Hourly Promo Broadcast
 
 on:
   schedule:
-    # Jalan SETIAP JAM pada menit ke-0
-    - cron: '0 * * * *'
+    # Jalan SETIAP 30 MENIT (Menit ke-0 dan ke-30)
+    # Contoh: 08:00, 08:30, 09:00, 09:30...
+    - cron: '0,30 * * * *'
   workflow_dispatch:
 
 jobs:
