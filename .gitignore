@@ -1,14 +1,21 @@
 # Ignore everything by default
 *
 
-# Allow directories (so we can traverse them if needed, though mostly flat here)
+# Allow directories (so we can traverse them)
 !*/
+!.github/
+!.github/workflows/
 
 # Whitelist specific files (Keep these)
 !MoonTele.py
 !requirements.txt
 !README.md
 !.gitignore
+
+# Whitelist new automation files
+!autocast.py
+!gen_session.py
+!.github/workflows/daily_promo.yml
 
 # Explicitly ignore sensitive and generated files (Double safety)
 *.session

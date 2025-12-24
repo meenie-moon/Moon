@@ -1,0 +1,39 @@
+name: Daily Promo Broadcast
+
+on:
+  schedule:
+    # Jalan setiap hari jam 00:00 UTC (07:00 WIB)
+    # Format Cron: Minute Hour Day Month DayOfWeek
+    - cron: '0 0 * * *'
+  
+  # Tombol manual "Run Workflow" di tab Actions GitHub
+  workflow_dispatch:
+
+jobs:
+  broadcast:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install telethon rich
+
+    - name: Run Auto-Broadcast
+      env:
+        # Mengambil rahasia dari GitHub Secrets
+        TG_API_ID: ${{ secrets.TG_API_ID }}
+        TG_API_HASH: ${{ secrets.TG_API_HASH }}
+        TG_SESSION_STRING: ${{ secrets.TG_SESSION_STRING }}
+        
+        # Nama template target (sesuaikan dengan yang Anda buat di MoonTele)
+        TG_TEMPLATE_NAME: 'Promo Harian' 
+      run: python autocast.py
