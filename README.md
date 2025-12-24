@@ -64,6 +64,12 @@ python3 MoonTele.py
 
 ---
 
+---
+
+**Bug report and criticism, please contact me:** [t.me/MoonCiella](https://t.me/MoonCiella)
+
+---
+
 ## ⚠️ Disclaimer
 
 Gunakan alat ini dengan bijak. Pengiriman pesan massal (spam) yang berlebihan dapat menyebabkan akun Telegram Anda dibatasi (limit) atau diblokir.
