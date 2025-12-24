@@ -7,19 +7,20 @@
 *   **🎨 Modern & Rich UI:** Antarmuka berbasis panel, tabel, dan warna yang memanjakan mata. Tidak ada lagi teks terminal yang membosankan.
 *   **👥 Multi-Account System:** Kelola banyak akun Telegram dalam satu aplikasi. Ganti akun dengan mudah tanpa perlu login ulang.
 *   **📊 Smart Progress Bar:** Visualisasi proses Scraping dan Broadcast dengan animasi loading bar yang akurat.
-*   **🔗 Advanced Forwarding:** Teruskan pesan hanya dengan menyalin Link. Mendukung Teks, Foto, Video, File, hingga **Album (Multiple Photos/Videos)**.
+*   **🔗 True Forwarding:** Teruskan pesan dengan tag 'Forwarded from' dan jumlah view asli. Kini mendukung topik forum dan Album media.
+*   **👀 Enhanced Chat List UI:** Tampilan daftar chat (Menu 1) kini lebih rapi dengan tabel interaktif.
 
 ---
 
 ## 🚀 Fitur Utama
 
-1.  **List Chats**: Menampilkan daftar obrolan Anda dalam bentuk tabel rapi (ID, Nama, Tipe Chat).
+1.  **List Chats**: Menampilkan daftar obrolan Anda dalam bentuk tabel interaktif yang rapi (ID, Nama, Tipe Chat), dengan opsi untuk menyimpan ke file.
 2.  **Forward Messages (Real-time)**: Memantau dan meneruskan pesan baru secara otomatis dari sumber ke tujuan (Auto-Forward).
 3.  **Scrape Past Messages**: Mengambil riwayat pesan lama (History) dari grup/forum dan menyimpannya ke file teks.
 4.  **Extract Data**: Memindai dan mengekstrak ribuan Tautan (Links), IP Address, dan Domain dari riwayat chat.
 5.  **Manage Templates**: Simpan daftar target grup/forum Anda sebagai "Template". Template kini tersimpan secara terisolasi untuk setiap akun.
 6.  **Smart Broadcast**: Kirim pesan massal dengan aman.
-    *   Mendukung input Manual, File `.txt`, atau **Forward via Link**.
+    *   Mendukung input Manual, File `.txt`, atau **Forward via Link**. Pilihan mode pengiriman: 'Send as Copy' (tanpa tag) atau 'True Forward' (dengan tag 'Forwarded from' dan dukungan topik forum).
     *   **Anti-Spam Delay:** Pengaturan jeda waktu antar pesan untuk menjaga keamanan akun.
     *   **Album Support:** Otomatis mendeteksi dan mengirim album foto/video secara utuh.
 
@@ -60,7 +61,9 @@ python3 MoonTele.py
 2.  Pilih Target (Single Chat atau Template).
 3.  Pilih Sumber Pesan:
     *   **[3] Forward Message (Recommended):** Cukup paste link pesan Telegram (contoh: `https://t.me/channel/123`).
-    *   Aplikasi akan otomatis menyalin konten (termasuk caption dan album) dan mengirimnya ke target.
+        *   Setelah link, Anda akan diminta memilih mode pengiriman:
+            *   **Send as Copy:** Pesan dikirim sebagai pesan baru (tanpa tag 'Forwarded from', views dimulai dari 0).
+            *   **True Forward:** Pesan diteruskan secara asli (dengan tag 'Forwarded from', views asli dipertahankan, dan kini mendukung topik forum spesifik).
 
 ---
 
