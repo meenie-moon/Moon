@@ -1,12 +1,12 @@
-name: Daily Promo Broadcast
+name: Hourly Promo Broadcast
 
 on:
   schedule:
-    # Jalan setiap hari jam 00:00 UTC (07:00 WIB)
-    # Format Cron: Minute Hour Day Month DayOfWeek
-    - cron: '0 0 * * *'
+    # Jalan SETIAP JAM pada menit ke-0 (Contoh: 08:00, 09:00, 10:00...)
+    # Catatan: GitHub Actions mungkin delay 5-10 menit dari jadwal karena antrian server gratis.
+    - cron: '0 * * * *'
   
-  # Tombol manual "Run Workflow" di tab Actions GitHub
+  # Tombol manual "Run Workflow"
   workflow_dispatch:
 
 jobs:
@@ -29,11 +29,14 @@ jobs:
 
     - name: Run Auto-Broadcast
       env:
-        # Mengambil rahasia dari GitHub Secrets
+        # Kredensial Akun
         TG_API_ID: ${{ secrets.TG_API_ID }}
         TG_API_HASH: ${{ secrets.TG_API_HASH }}
         TG_SESSION_STRING: ${{ secrets.TG_SESSION_STRING }}
         
-        # Nama template target (sesuaikan dengan yang Anda buat di MoonTele)
+        # DATA TARGET RAHASIA (JSON)
+        TG_TARGETS_JSON: ${{ secrets.TG_TARGETS_JSON }}
+        
+        # Nama template
         TG_TEMPLATE_NAME: 'Promo Harian' 
       run: python autocast.py
